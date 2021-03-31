@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html style="overflow:hidden;">
+<head>
+	<meta charset="utf-8">
+	
+	<!-- D3.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.0/d3.min.js" charset="utf-8"></script>
+	
+	<style>
+    </style>
+	
+</head>	
+<body>
+
+    <div style="display:inline-block; height:400px; width:460px;" id="dataviz_axisZoom"></div>
+    <div style="display:inline-block; height:400px; width:100px; margin-top:20px; vertical-align:top;">
+        <div style="height:270px; width:100%;">
+            <input style="width:100%;" type="number" id="min1" name="min1" value="32" oninput="updateScales()"><br>
+             to <br>
+            <input style="width:100%;" type="number" id="max1" name="max1" value="212" oninput="updateScales()">
+        </div>
+        <div style="height:200px; width:100%">
+            <input style="width:100%;" type="number" id="min2" name="min2" value="0" oninput="updateScales()"><br>
+             to <br>
+            <input style="width:100%;" type="number" id="max2" name="max2" value="100" oninput="updateScales()">
+        </div>
+    </div>
+<script>
+// set the dimensions and margins of the graph
+var min1 = document.getElementById("min1");
+var min2 = document.getElementById("min2");
+var max1 = document.getElementById("max1");
+var max2 = document.getElementById("max2");
+
+var margin = {top: 60, right: 100, bottom: 60, left: 60},
+    width = 460,
+    height = 400;
+
+// append the SVG object to the body of the page
+var SVG = d3.select("#dataviz_axisZoom")
+  .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  // Add X axis 1
+  var x1 = d3.scaleLinear()
+    .domain([min1.value, max1.value])
+    .range([ 0, width - margin.left - margin.right ]);
+  var xAxis1 = SVG.append("g")
+    .attr("transform", "translate("+margin.left+"," + margin.top + ")")
+    .call(
+        d3.axisTop(x1)
+    );
+    
+
+  // Add X axis 2
+  var x2 = d3.scaleLinear()
+    .domain([min2.value, max2.value])
+    .range([ 0, width -margin.left - margin.right ]);
+  var xAxis2 = SVG.append("g")
+    .attr("transform", "translate("+margin.left+"," + (height - margin.bottom) + ")")
+    .call(
+        d3.axisBottom(x2)
+    );
+
+  // Add [0,1] axis
+  var unit = d3.scaleLinear()
+    .domain([0, 1])
+    .range([ 0, width - margin.left - margin.right ]);
+  var unitAxis = SVG.append("g")
+    .attr("transform", "translate("+margin.left+"," + height/2 + ")")
+    .call(d3.axisTop(unit));
+
+  var dragVert = d3.drag()
+    .on("drag", updateChartVert);
+
+  var yVertpos = 150;
+  var yVertBox = SVG.append("rect")
+      .attr("width", 100)
+      .attr("height", height - margin.top - margin.bottom)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('transform', 'translate(' + (yVertpos - 50) + ',' + margin.top + ')')
+      .call(dragVert);
+
+  var yVert = SVG.append('line')
+    .attr('x1', yVertpos)
+    .attr('y1', height - margin.bottom)
+    .attr('x2', yVertpos)
+    .attr('y2', 0 + margin.top)
+    .style("stroke-width", 2)
+    .style("stroke", "red")
+    .style("fill", "none");
+
+  var yverttexttop = SVG.append('text')
+    .attr('x', yVertpos + 10)
+    .attr('y', margin.top + 20)
+    .text(x1.invert(yVertpos - margin.left).toPrecision(3));
+  var yverttextmid = SVG.append('text')
+    .attr('x', yVertpos + 10)
+    .attr('y', height/2 + 20)
+    .text(unit.invert(yVertpos - margin.left).toPrecision(3));
+  var yverttextbottom = SVG.append('text')
+    .attr('x', yVertpos + 10)
+    .attr('y', height - margin.bottom - 10)
+    .text(x2.invert(yVertpos - margin.left).toPrecision(3));
+
+  var newX1 = x1;
+  var newX2 = x2;
+  function updateText() {
+    yverttextbottom
+        .attr('x', yVertpos + 10)
+        .text(newX2.invert(yVertpos - margin.left).toPrecision(3));
+    yverttexttop
+        .attr('x', yVertpos + 10)
+        .text(newX1.invert(yVertpos - margin.left).toPrecision(3));
+    yverttextmid
+        .attr('x', yVertpos + 10)
+        .text(unit.invert(yVertpos - margin.left).toPrecision(3));
+  }
+
+  function updateChartVert() {
+    if ((margin.left <= d3.event.x) && (d3.event.x <= width - margin.right)) { 
+        yVertpos = d3.event.x;
+        yVert.attr('x1', d3.event.x).attr('x2', d3.event.x);
+        yVertBox.attr('transform', 'translate(' + (d3.event.x - 50) + ' ,' + margin.top + ')');
+        updateText();
+    }
+  }
+
+  // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+  var zoom1 = d3.zoom()
+      .on("zoom", updateChart1);
+  // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+  var zoom2 = d3.zoom()
+      .on("zoom", updateChart2);
+
+  // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+  var r1 = SVG.append("rect")
+      .attr("width", width)
+      .attr("height", margin.top)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('transform', 'translate(0,0)')
+      .call(zoom1);
+  // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+  var r2 = SVG.append("rect")
+      .attr("width", width)
+      .attr("height", margin.bottom)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('transform', 'translate(0,' + (height - margin.bottom) + ')')
+      .call(zoom2);
+  // now the user can zoom and it will trigger the function called updateChart
+
+  // A function that updates the chart when the user zoom and thus new boundaries are available
+  function updateChart1() {
+
+    // recover the new scale
+    newX1 = d3.event.transform.rescaleX(x1);
+    // update axes with these new boundaries
+    xAxis1.call(d3.axisTop(newX1)
+    );
+    var domain = newX1.domain();
+    min1.value = domain[0];
+    max1.value = domain[1];
+    updateText();
+
+  }
+
+  function updateChart2() {
+
+    // recover the new scale
+    newX2 = d3.event.transform.rescaleX(x2);
+    // update axes with these new boundaries
+    xAxis2.call(d3.axisBottom(newX2)
+    );
+    console.log(newX2.domain());
+    var domain = newX2.domain();
+    min2.value = domain[0];
+    max2.value = domain[1];
+    updateText();
+
+  }
+
+  function updateScales() {
+    newX1 = d3.scaleLinear()
+        .domain([min1.value, max1.value])
+        .range([ 0, width -margin.left - margin.right ]);
+    xAxis1.call(d3.axisTop(newX1)
+    );
+    newX2 = d3.scaleLinear()
+        .domain([min2.value, max2.value])
+        .range([ 0, width -margin.left - margin.right ]);
+    xAxis2.call(d3.axisBottom(newX2)
+    );
+    updateText();
+
+  }
+
+</script>
+
+</body>
+</html>
