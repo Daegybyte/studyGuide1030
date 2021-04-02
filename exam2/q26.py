@@ -27,3 +27,5 @@ else:
     outputs()
     print("You must decrease bits per sample")
 
+quit()
+
