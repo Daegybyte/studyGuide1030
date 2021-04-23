@@ -2,7 +2,7 @@
 
 print(str("Bitrate AKA Bits Per Second\n"))
 
-samples = int(input("Samples per second: "))
+samples = int(input("Samples per second: ")) #Typically 44100
 bits = int(input("Bits per sample: " ))
 
 bitrate = (samples*bits)
