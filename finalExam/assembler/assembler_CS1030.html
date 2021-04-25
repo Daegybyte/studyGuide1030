@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)https://my.eng.utah.edu/~cs1400/assembler-master/Assembler.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+
+    <title>Assembler for CS1030</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+
+    <meta name="author" content="Minwei Shen">
+
+    <meta name="description" content="This is an assembler implemented in Javascript used for CS1030, University of Utah, Fall 2014.Supported instructions are:
+
+store ra, L // Store the va">
+
+
+    <link rel="stylesheet" href="./src/style.css" type="text/css">
+
+  <body>
+	<div class="article-content">
+
+
+		<div id="toc" class="toc-article" style="display: none;">
+			<strong class="toc-title">Contents</strong>
+
+		</div>
+
+		<p>This is an assembler implemented in Javascript used for CS1030, University of Utah. This assembler was written by <a ref="mwshen.info">Minwei Shen</a>, a TA for the course in 2014.
+</p><p>
+		  <br></p><h2>Supported instructions are:</h2><p></p>
+<ul>
+<li>store ra, L // Store the value stored in ra into L </li>
+<li>load L, ra // Load the value stored at L into ra </li>
+<li>cmp ra, rb // Compare the values of ra and rb, setting condition codes </li>
+<li>add ra, rb, rc // Add the values of ra and rb, put result in rc </li>
+<li>sub ra, rb, rc // Subtract the values of ra and rb, put result in rc </li>
+<li>and ra, rb, rc // And the values of ra and rb, put result in rc </li>
+<li>nor ra, rb, rc // Nor the values of ra and rb, put result in rc </li>
+<li>not ra,rb // Not the values of ra, put result in rb </li>
+<li>halt // Halt the computer </li>
+<li>jump L // Execute the instruction labeled L next </li>
+<li>bgt L // If in the last arithmetic operation or comparison the first operand was greater than the second operand, execute the instruction labeled L next </li>
+<li>bne L // If in the last arithmetic operation or comparison the operands were unequal, execute the instruction labeled L next</li>
+<li>clear ra // Store zero into ra</li>
+</ul>
+            <div style="width:100%" align="center">
+              <textarea id="assembly" rows="20" cols="50"></textarea>
+              <textarea id="machine" rows="20" cols="30" readonly=""></textarea>
+              <button onclick="assemble()" style="width:70px">Assemble</button>
+              <button onclick="clean()" style="width:60px">Clear</button>
+            </div>
+
+	</div>
+
+		<p class="copyright">Powered by <a href="http://hexo.io/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014
+
+		<a href="http://mwshen.info/" target="_blank" title="Minwei Shen">Minwei Shen</a>
+
+		</p>
+
+
+    <script src="./src/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="./src/assembler.js" type="text/javascript"></script>
+</body></html>
