@@ -1,3 +1,4 @@
+# I don't know why thid was on exam 1 other than to test our ability to read pseudocode
 import random
 
 repeat = int(input("repeat times: "))
