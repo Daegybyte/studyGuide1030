@@ -1,3 +1,5 @@
+# This program creates a fib sequence off of two numbers and repeats until the iteration limit is set and then one extra for good measure
+
 fibonacci = []
 
 previousFib = int(input(str("start one: ")))
