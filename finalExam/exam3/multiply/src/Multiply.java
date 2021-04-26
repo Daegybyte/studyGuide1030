@@ -1,7 +1,7 @@
 public class Multiply {
 
     public static void main(String args[]) {
-        System.out.println(mysteryFunction(2,8));
+        System.out.println(mysteryFunction(2,3));
     }
 
     public static int mysteryFunction(int x, int y) {
